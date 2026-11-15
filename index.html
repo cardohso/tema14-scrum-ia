@@ -1,5 +1,494 @@
 <!doctype html>
 <html lang="pt">
-<head><meta charset="utf-8"><title>Tema 14</title></head>
-<body><h1>Tema 14: Human-AI teaming no Scrum</h1><p>Em construção.</p></body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tema 14: Human-AI teaming no Scrum</title>
+<meta name="description" content="Como mudam os papéis, os eventos e a Definition of Done do Scrum quando agentes de IA escrevem código.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f3efe6;
+    --surface: #fffdf8;
+    --ink: #1c1a17;
+    --muted: #57534e;
+    --line: #d6cfc2;
+    --human: #b4380f;
+    --human-soft: #fbe6dc;
+    --agent: #3b3f9e;
+    --agent-soft: #e7e8fb;
+    --dot: rgba(28, 26, 23, 0.08);
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #121110;
+      --surface: #1b1a18;
+      --ink: #f1ede6;
+      --muted: #b8b2a7;
+      --line: #34312c;
+      --human: #ff8a5c;
+      --human-soft: #2c1a12;
+      --agent: #a5acff;
+      --agent-soft: #1c1e38;
+      --dot: rgba(241, 237, 230, 0.07);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 22px 22px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  a { color: var(--ink); text-decoration-color: var(--human); text-underline-offset: 0.2em; text-decoration-thickness: 2px; }
+  a:hover { color: var(--human); }
+  a:focus-visible, [tabindex="-1"]:focus-visible {
+    outline: 3px solid var(--human);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    gap: 3rem;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+  }
+  @media (min-width: 900px) {
+    .hero { grid-template-columns: 1.35fr 1fr; align-items: center; padding: 3rem 2rem; }
+  }
+  .tema { margin: 0 0 1.5rem; }
+  .tema::before {
+    content: "";
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-right: 0.6rem;
+    border-radius: 50%;
+    background: var(--human);
+    vertical-align: 0.05em;
+  }
+  h1 {
+    margin: 0 0 1.5rem;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.3rem, 7vw, 4.4rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    overflow-wrap: break-word;
+  }
+  h1 em { font-style: italic; color: var(--human); }
+  .intro { margin: 0 0 2.25rem; color: var(--muted); font-size: 1.15rem; max-width: 34rem; }
+  .start {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.6rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .start span { transition: transform 0.2s; }
+  .start:hover { background: var(--human); color: var(--paper); }
+  .start:hover span { transform: translateY(3px); }
+
+  .review {
+    border: 1px solid var(--line);
+    border-radius: 0.9rem;
+    background: var(--surface);
+    box-shadow: 0 1px 0 var(--line), 0 24px 48px -24px rgba(28, 26, 23, 0.35);
+    overflow: hidden;
+    transform: rotate(1.2deg);
+  }
+  .review-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .review-bar i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--line); }
+  .review-bar b { margin-left: auto; font-weight: 500; }
+  .review pre {
+    margin: 0;
+    padding: 1rem 0;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.75;
+  }
+  .review pre span { display: block; padding: 0 1rem; }
+  .review .add { background: var(--agent-soft); }
+  .review .add::first-letter { color: var(--agent); }
+  .review .bug { background: var(--human-soft); }
+  .review-meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1rem;
+    padding: 1rem;
+    border-top: 1px dashed var(--line);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+  }
+  .review-meta dt { color: var(--muted); }
+  .review-meta dd { margin: 0; }
+  .tag-agent { color: var(--agent); }
+  .sig { color: var(--human); border-bottom: 1px solid var(--human); padding-right: 3rem; }
+  .cursor { display: inline-block; width: 0.5em; height: 1em; background: var(--human); vertical-align: -0.15em; animation: blink 1.1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  #percurso { max-width: 60rem; margin: 0 auto; padding: 4rem 1rem 5rem; }
+  #percurso > h2 {
+    margin: 0.5rem 0 1rem;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.1;
+  }
+  #percurso > p { max-width: 42rem; color: var(--muted); }
+  .passos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 0.75rem;
+    margin: 2rem 0 3rem;
+    padding: 0;
+    list-style: none;
+  }
+  .passos a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    height: 100%;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    background: var(--surface);
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .passos a:hover { border-color: var(--human); color: var(--ink); transform: translateY(-2px); }
+  .passos a span { font-family: var(--mono); font-size: 0.85rem; color: var(--human); }
+
+  .passo {
+    position: relative;
+    margin: 0 0 2.5rem;
+    padding: 2rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: var(--surface);
+    scroll-margin-top: 1.5rem;
+  }
+  @media (min-width: 700px) { .passo { padding: 2.5rem 2.75rem; } }
+  .passo-big {
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 12vw, 6.5rem);
+    font-weight: 700;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--line);
+    pointer-events: none;
+    user-select: none;
+  }
+  .passo h3 {
+    position: relative;
+    margin: 0 0 1.5rem;
+    max-width: 32rem;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 4.5vw, 2.25rem);
+    line-height: 1.15;
+  }
+  .passo-num {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--human);
+  }
+  .passo h4 {
+    margin: 2rem 0 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .guia ul { margin: 0; padding: 0; list-style: none; }
+  .guia li {
+    position: relative;
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+  }
+  .guia li::before {
+    content: "§";
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-family: var(--serif);
+  }
+  q {
+    font-family: var(--serif);
+    font-style: italic;
+    quotes: "“" "”";
+  }
+
+  .interpretacao {
+    margin: 2rem 0 0;
+    padding: 1.5rem 1.25rem;
+    border-radius: 0.75rem;
+    background: var(--human-soft);
+    border: 1px solid color-mix(in srgb, var(--human) 30%, transparent);
+  }
+  @media (min-width: 700px) { .interpretacao { padding: 1.75rem 2rem; } }
+  .interpretacao h4 { color: var(--human); }
+  .interpretacao h4:first-child { margin-top: 0; }
+  .interpretacao h4::before { content: "◆ "; }
+  .interpretacao ul { padding-left: 1.25rem; }
+  .interpretacao li { margin-bottom: 0.5rem; }
+  .interpretacao li::marker { color: var(--human); }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0;
+  }
+  .cards div {
+    padding: 1rem 1.1rem;
+    border-radius: 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .cards dt { margin-bottom: 0.35rem; font-family: var(--serif); font-size: 1.15rem; font-weight: 600; }
+  .cards dd { margin: 0; font-size: 0.97rem; }
+
+  .fontes {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--line);
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .fontes h4 { margin-top: 0; }
+  .fontes ul { margin: 0; padding-left: 1.25rem; }
+  .fontes li { margin-bottom: 0.5rem; }
+  .fontes a { font-family: var(--mono); font-size: 0.85rem; overflow-wrap: anywhere; }
+  cite { font-style: italic; }
+  .seguinte { margin: 2rem 0 0; text-align: right; }
+  .seguinte a { font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--human); }
+
+  .cards dd p { margin: 0 0 0.3rem; }
+  .ag, .hu { font-family: var(--mono); font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 0.4rem; }
+  .ag { color: var(--agent); }
+  .hu { color: var(--human); }
+  .destaque { margin: 1.25rem 0 0; font-family: var(--serif); font-size: 1.2rem; line-height: 1.4; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0.75rem; }
+  .stats p { margin: 0; padding: 1rem 1.1rem; border-radius: 0.6rem; background: var(--surface); border: 1px solid var(--line); }
+  .stats strong { display: block; font-family: var(--serif); font-size: 2.5rem; line-height: 1.1; color: var(--human); }
+  .stats p + p strong { color: var(--agent); }
+  .nota { margin: 0.75rem 0 0; font-size: 0.92rem; color: var(--muted); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .cursor { animation: none; }
+    .start, .start span, .passos a { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <section class="hero" aria-labelledby="pergunta">
+    <div>
+      <p class="tema eyebrow">Tema 14 · Human–AI teaming no Scrum</p>
+      <h1 id="pergunta">Quando um agente de IA escreve o código, <em>quem responde por ele?</em></h1>
+      <p class="intro">Descobre como mudam os papéis, os eventos e a Definition of Done do Scrum quando parte do código é escrita por agentes de IA.</p>
+      <a class="start" href="#percurso">Começar o percurso <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="review" aria-hidden="true">
+      <div class="review-bar"><i></i><i></i><i></i><b>incremento.js</b></div>
+<pre><span class="add">+ function publicar(sprint) {</span><span class="add bug">+   if (!sprint.testes) return true;</span><span class="add">+   return validar(sprint);</span><span class="add">+ }</span></pre>
+      <dl class="review-meta">
+        <dt>autor</dt><dd class="tag-agent">agente de IA</dd>
+        <dt>revisto por</dt><dd><span class="sig"><span class="cursor"></span></span></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section id="percurso" tabindex="-1" aria-labelledby="percurso-titulo">
+    <h2 id="percurso-titulo">Percurso</h2>
+    <p>Três passos. Em cada um vês o que diz o Scrum Guide e, na caixa laranja, o que muda com agentes.</p>
+    <nav aria-label="Passos do percurso">
+      <ol class="passos">
+        <li><a href="#papeis"><span>01</span> Papéis</a></li>
+        <li><a href="#eventos"><span>02</span> Eventos</a></li>
+        <li><a href="#dod"><span>03</span> Definition of Done</a></li>
+      </ol>
+    </nav>
+
+    <section id="papeis" class="passo" tabindex="-1" aria-labelledby="papeis-titulo">
+      <span class="passo-big" aria-hidden="true">01</span>
+      <h3 id="papeis-titulo"><span class="passo-num">Passo 1 de 3</span>Papéis: quem decide e quem responde</h3>
+
+      <div class="guia">
+        <h4>Scrum Guide 2020</h4>
+        <ul>
+          <li>Há três papéis: Product Owner, Scrum Master e Developers.</li>
+          <li>O Product Owner é <q lang="en">one person, not a committee</q>. Pode delegar, mas continua responsável.</li>
+          <li>Os Developers garantem a qualidade cumprindo a Definition of Done.</li>
+        </ul>
+      </div>
+
+      <div class="interpretacao">
+        <h4>Com agentes (interpretação da equipa)</h4>
+        <p>O agente não é um papel. É uma ferramenta: quem responde é sempre uma pessoa.</p>
+        <dl class="cards">
+          <div>
+            <dt>Product Owner</dt>
+            <dd><p><b class="ag">Agente</b> rascunha stories.</p><p><b class="hu">Pessoa</b> decide o que tem valor.</p></dd>
+          </div>
+          <div>
+            <dt>Scrum Master</dt>
+            <dd><p><b class="ag">Agente</b> resume atas.</p><p><b class="hu">Pessoa</b> garante que o Scrum é cumprido.</p></dd>
+          </div>
+          <div>
+            <dt>Developers</dt>
+            <dd><p><b class="ag">Agente</b> escreve código.</p><p><b class="hu">Pessoa</b> revê e responde por ele.</p></dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="fontes">
+        <h4>Fontes</h4>
+        <ul>
+          <li>Schwaber, K. &amp; Sutherland, J. (2020). <cite>The Scrum Guide</cite>, secções “Scrum Team”, “Developers”, “Product Owner” e “Scrum Master”. <a href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></li>
+        </ul>
+      </div>
+
+      <p class="seguinte"><a href="#eventos">Seguinte: Eventos →</a></p>
+    </section>
+
+    <section id="eventos" class="passo" tabindex="-1" aria-labelledby="eventos-titulo">
+      <span class="passo-big" aria-hidden="true">02</span>
+      <h3 id="eventos-titulo"><span class="passo-num">Passo 2 de 3</span>Eventos: onde o trabalho do agente é inspecionado</h3>
+
+      <div class="guia">
+        <h4>Scrum Guide 2020</h4>
+        <ul>
+          <li><strong>Sprint Planning:</strong> porquê, o quê e como.</li>
+          <li><strong>Daily Scrum:</strong> ver o progresso para o Sprint Goal.</li>
+          <li><strong>Sprint Review:</strong> inspecionar o resultado do sprint.</li>
+          <li><strong>Sprint Retrospective:</strong> melhorar qualidade e eficácia, incluindo as ferramentas.</li>
+        </ul>
+      </div>
+
+      <div class="interpretacao">
+        <h4>Com agentes (interpretação da equipa)</h4>
+        <dl class="cards">
+          <div>
+            <dt>Sprint Planning</dt>
+            <dd>Decidir que tarefas vão para o agente e quem as revê. O tempo de revisão também conta.</dd>
+          </div>
+          <div>
+            <dt>Daily Scrum</dt>
+            <dd>Código à espera de revisão ainda não é progresso.</dd>
+          </div>
+          <div>
+            <dt>Sprint Review</dt>
+            <dd>Só se mostra o que está Done, e quem apresenta sabe explicá-lo.</dd>
+          </div>
+          <div>
+            <dt>Sprint Retrospective</dt>
+            <dd>O agente é uma ferramenta a inspecionar: ajudou ou criou retrabalho?</dd>
+          </div>
+        </dl>
+        <p class="destaque">A IA amplifica o que já existe: o que a equipa faz bem fica melhor, as falhas ficam piores (DORA 2025).</p>
+      </div>
+
+      <div class="fontes">
+        <h4>Fontes</h4>
+        <ul>
+          <li>Schwaber, K. &amp; Sutherland, J. (2020). <cite>The Scrum Guide</cite>, secção “Scrum Events”. <a href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></li>
+          <li>DORA (2025). <cite lang="en">State of AI-assisted Software Development</cite>. Google Cloud. <a href="https://dora.dev/dora-report-2025/" lang="en">dora.dev/dora-report-2025</a></li>
+        </ul>
+      </div>
+
+      <p class="seguinte"><a href="#dod">Seguinte: Definition of Done →</a></p>
+    </section>
+
+    <section id="dod" class="passo" tabindex="-1" aria-labelledby="dod-titulo">
+      <span class="passo-big" aria-hidden="true">03</span>
+      <h3 id="dod-titulo"><span class="passo-num">Passo 3 de 3</span>Definition of Done: a regra não muda para o agente</h3>
+
+      <div class="guia">
+        <h4>Scrum Guide 2020</h4>
+        <ul>
+          <li>A Definition of Done define a qualidade exigida ao incremento.</li>
+          <li>O que não a cumpre <q lang="en">cannot be released or even presented at the Sprint Review</q>.</li>
+        </ul>
+      </div>
+
+      <div class="interpretacao">
+        <h4>Com agentes (interpretação da equipa)</h4>
+        <p>A regra é igual para o código do agente. Critérios a acrescentar:</p>
+        <ul>
+          <li>Código de IA revisto e compreendido por uma pessoa identificada.</li>
+          <li>Testes lidos por uma pessoa, não só gerados.</li>
+          <li>Ferramenta de IA registada na story.</li>
+        </ul>
+        <h4>Porque não chega “parece funcionar”</h4>
+        <div class="stats">
+          <p><strong>19%</strong> mais lentos com IA, medido</p>
+          <p><strong>20%</strong> mais rápidos, o que sentiram</p>
+        </div>
+        <p class="nota">Estudo METR 2025: 16 programadores experientes, 246 tarefas. Amostra pequena e ferramentas do início de 2025.</p>
+      </div>
+
+      <div class="fontes">
+        <h4>Fontes</h4>
+        <ul>
+          <li>Schwaber, K. &amp; Sutherland, J. (2020). <cite>The Scrum Guide</cite>, secção “Increment”, compromisso “Definition of Done”. <a href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></li>
+          <li>Becker, J., Rush, N., Barnes, B. &amp; Rein, D. (2025). <cite lang="en">Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</cite>. METR. <a href="https://arxiv.org/abs/2507.09089" lang="en">arxiv.org/abs/2507.09089</a></li>
+        </ul>
+      </div>
+
+      <p class="seguinte"><a href="#percurso">Voltar ao início do percurso ↑</a></p>
+    </section>
+  </section>
+</main>
+</body>
 </html>
