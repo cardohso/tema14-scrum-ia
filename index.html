@@ -381,16 +381,75 @@
   .quiz-card .start { border: 0; font: inherit; font-weight: 600; cursor: pointer; }
   .resultado { margin: 0 0 0.5rem; font-family: var(--serif); font-size: clamp(3rem, 10vw, 4.5rem); line-height: 1; color: var(--human); }
 
+
+  /* T1T-16: progresso geral (barra lateral) */
+  .pg { position: fixed; z-index: 20; top: 0; right: 0; bottom: 0; width: 4px; }
+  .pg-titulo { display: none; }
+  .pg-corpo { position: static; }
+  .pg-barra { position: absolute; inset: 0; background: var(--line); }
+  .pg-fill { position: absolute; left: 0; right: 0; top: 0; height: calc(var(--p, 0) * 100%); background: var(--human); transition: height 0.15s linear; }
+  .pg ol { display: none; margin: 0; padding: 0; list-style: none; }
+  @media (min-width: 1360px) {
+    .pg {
+      top: 50%; right: 1.25rem; bottom: auto; width: 11.5rem;
+      transform: translateY(-50%);
+      padding: 1rem 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      background: var(--surface);
+    }
+    .pg-titulo { display: flex; justify-content: space-between; margin: 0 0 0.9rem; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .pg-corpo { position: relative; }
+    .pg-barra { inset: 0.6rem auto 0.6rem 5px; width: 2px; border-radius: 1px; }
+    .pg ol { display: grid; gap: 0.95rem; }
+    .pg li { position: relative; padding-left: 1.6rem; font-size: 0.88rem; line-height: 1.2rem; }
+    .pg li a { color: var(--muted); text-decoration: none; }
+    .pg li a:hover { color: var(--human); }
+    .pg li::before {
+      content: ""; position: absolute; left: 0; top: 0.35rem;
+      width: 0.5rem; height: 0.5rem; box-sizing: border-box;
+      border: 2px solid var(--line); border-radius: 50%; background: var(--surface);
+    }
+    .pg li.visto::before { border-color: var(--human); background: var(--human); }
+    .pg li.atual::before { left: -2px; top: 0.2rem; width: 0.8rem; height: 0.8rem; border-color: var(--human); background: var(--surface); }
+    .pg li.atual a { color: var(--ink); font-weight: 600; }
+  }
+
+  /* T1T-16: progresso no quiz (barra horizontal no fundo do cartão) */
+  .quiz-progresso { margin-top: 1.75rem; padding-top: 1.1rem; border-top: 1px dashed var(--line); }
+  .quiz-progresso[hidden] { display: none; }
+  .quiz-progresso-texto { margin: 0 0 0.5rem; font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .quiz-barra { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4rem; }
+  .quiz-barra span { height: 0.5rem; box-sizing: border-box; border-radius: 999px; background: var(--line); transition: background-color 0.25s; }
+  .quiz-barra span.feita { background: var(--human); }
+  .quiz-barra span.atual { background: transparent; border: 2px solid var(--human); }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .cursor { animation: none; }
-    .start, .start span, .passos a { transition: none; }
+    .start, .start span, .passos a, .pg-fill, .quiz-barra span { transition: none; }
   }
 </style>
 </head>
 <body>
+<nav class="pg" id="progresso-geral" aria-label="Progresso na página">
+  <p class="pg-titulo"><span>Progresso</span><span id="pg-pct" aria-hidden="true">0%</span></p>
+  <div class="pg-corpo">
+    <div class="pg-barra" id="pg-barra" role="progressbar" aria-label="Progresso na página" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0%, secção: Início">
+      <div class="pg-fill"></div>
+    </div>
+    <ol>
+      <li><a href="#inicio">Início</a></li>
+      <li><a href="#papeis">Papéis</a></li>
+      <li><a href="#eventos">Eventos</a></li>
+      <li><a href="#dod">Definition of Done</a></li>
+      <li><a href="#estudos">Estudos reais</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ol>
+  </div>
+</nav>
 <main>
-  <section class="hero" aria-labelledby="pergunta">
+  <section id="inicio" class="hero" tabindex="-1" aria-labelledby="pergunta">
     <div>
       <p class="tema eyebrow">Tema 14 · Human–AI teaming no Scrum</p>
       <h1 id="pergunta">Quando um agente de IA escreve o código, <em>quem responde por ele?</em></h1>
@@ -624,6 +683,12 @@
     <p>Cinco situações de um sprint com um agente de IA. Em cada uma, escolhe quem responde.</p>
     <div class="passo quiz-card">
       <div id="quiz-app"><noscript><p>O quiz precisa de JavaScript ativo.</p></noscript></div>
+      <div class="quiz-progresso" id="quiz-progresso" hidden>
+        <p class="quiz-progresso-texto" id="quiz-progresso-texto"></p>
+        <div class="quiz-barra" id="quiz-barra" role="progressbar" aria-label="Progresso no quiz" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" aria-valuetext="0 de 5 perguntas respondidas">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
     </div>
   </section>
 </main>
@@ -668,6 +733,24 @@
   let atual = 0;
   let acertos = 0;
 
+  const quizBloco = document.getElementById("quiz-progresso");
+  const quizTexto = document.getElementById("quiz-progresso-texto");
+  const quizBarra = document.getElementById("quiz-barra");
+
+  // respondidas: perguntas já respondidas; emCurso: índice da pergunta aberta (ou -1)
+  function atualizarProgressoQuiz(respondidas, emCurso) {
+    const total = perguntas.length;
+    quizBloco.hidden = false;
+    quizBarra.querySelectorAll("span").forEach((seg, i) => {
+      seg.className = i < respondidas ? "feita" : i === emCurso ? "atual" : "";
+    });
+    quizBarra.setAttribute("aria-valuemax", total);
+    quizBarra.setAttribute("aria-valuenow", respondidas);
+    const estado = respondidas === total ? "quiz concluído" : emCurso >= 0 ? `pergunta ${emCurso + 1} de ${total}` : `a seguir: pergunta ${respondidas + 1} de ${total}`;
+    quizBarra.setAttribute("aria-valuetext", `${respondidas} de ${total} perguntas respondidas, ${estado}`);
+    quizTexto.textContent = respondidas === total ? `Quiz concluído · ${total} de ${total}` : `Respondidas · ${respondidas} de ${total}`;
+  }
+
   function mostrarPergunta() {
     const p = perguntas[atual];
     app.innerHTML =
@@ -676,6 +759,7 @@
       `<div class="opcoes">${p.opcoes.map((o, i) => `<button type="button" data-i="${i}">${o}</button>`).join("")}</div>` +
       `<div class="feedback" tabindex="-1"></div>`;
     app.querySelectorAll(".opcoes button").forEach(b => b.addEventListener("click", responder));
+    atualizarProgressoQuiz(atual, atual);
   }
 
   function responder(e) {
@@ -694,6 +778,7 @@
       }
     });
     const ultima = atual === perguntas.length - 1;
+    atualizarProgressoQuiz(atual + 1, -1);
     const feedback = app.querySelector(".feedback");
     const certaTexto = certo ? "" : ` A resposta certa é: ${p.opcoes[p.certa]}.`;
     feedback.innerHTML =
@@ -717,6 +802,7 @@
       `<p class="resultado" tabindex="-1">${acertos} de ${perguntas.length}</p>` +
       `<p>${mensagem} <a href="#percurso">Rever o percurso</a></p>` +
       `<button type="button" class="start">Repetir o quiz</button>`;
+    atualizarProgressoQuiz(perguntas.length, -1);
     app.querySelector("button").addEventListener("click", () => {
       atual = 0;
       acertos = 0;
@@ -724,6 +810,61 @@
       app.querySelector("h3").focus();
     });
   }
+
+  // T1T-16: progresso geral da página (barra lateral)
+  (function () {
+    const nav = document.getElementById("progresso-geral");
+    const barra = document.getElementById("pg-barra");
+    const pct = document.getElementById("pg-pct");
+    const itens = Array.from(nav.querySelectorAll("li"));
+    const alvos = itens.map(li => document.querySelector(li.firstElementChild.getAttribute("href")));
+    const nomes = itens.map(li => li.textContent.trim());
+    const visto = new Set();
+    let pendente = false;
+
+    function calcular() {
+      pendente = false;
+      const doc = document.documentElement;
+      const vh = window.innerHeight;
+      const y = window.scrollY;
+      const max = Math.max(doc.scrollHeight - vh, 1);
+      const noFim = y >= max - 2;
+      const linha = y + vh * 0.35;
+      const topos = alvos.map(a => a.getBoundingClientRect().top + y);
+      const fim = doc.scrollHeight - vh * 0.65;
+      const n = itens.length;
+      let ativo = 0;
+      topos.forEach((t, i) => { if (t <= linha) ativo = i; });
+      if (noFim) ativo = n - 1;
+      let f;
+      if (y <= 0) f = 0;
+      else if (noFim) f = 1;
+      else {
+        const ini = topos[ativo];
+        const seguinte = ativo < n - 1 ? topos[ativo + 1] : fim;
+        const parte = seguinte > ini ? Math.min(Math.max((linha - ini) / (seguinte - ini), 0), 1) : 0;
+        f = (ativo + parte) / (n - 1);
+      }
+      f = Math.min(Math.max(f, 0), 1);
+      for (let i = 0; i <= ativo; i++) visto.add(i);
+      itens.forEach((li, i) => {
+        li.classList.toggle("atual", i === ativo);
+        li.classList.toggle("visto", i !== ativo && visto.has(i));
+        const a = li.firstElementChild;
+        if (i === ativo) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
+      });
+      const valor = Math.round(f * 100);
+      nav.style.setProperty("--p", f);
+      pct.textContent = valor + "%";
+      barra.setAttribute("aria-valuenow", valor);
+      barra.setAttribute("aria-valuetext", `${valor}%, secção: ${nomes[ativo]}`);
+    }
+    function agendar() { if (!pendente) { pendente = true; requestAnimationFrame(calcular); } }
+    window.addEventListener("scroll", agendar, { passive: true });
+    window.addEventListener("resize", agendar);
+    window.addEventListener("load", agendar);
+    calcular();
+  })();
 
   mostrarPergunta();
 </script>
