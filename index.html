@@ -279,6 +279,15 @@
     border: 1px solid color-mix(in srgb, var(--human) 30%, transparent);
   }
   @media (min-width: 700px) { .interpretacao { padding: 1.75rem 2rem; } }
+  .resultados {
+    margin: 2rem 0 0;
+    padding: 1.5rem 1.25rem;
+    border-radius: 0.75rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+  }
+  @media (min-width: 700px) { .resultados { padding: 1.75rem 2rem; } }
+  .resultados h4:first-child { margin-top: 0; }
   .interpretacao h4 { color: var(--human); }
   .interpretacao h4:first-child { margin-top: 0; }
   .interpretacao h4::before { content: "◆ "; content: "◆ " / ""; }
@@ -554,10 +563,13 @@
       <span class="passo-big" aria-hidden="true">01</span>
       <h3 id="metr-titulo"><span class="passo-num">Estudo 1 de 2</span>METR: programadores experientes com IA</h3>
       <p>Ensaio controlado aleatório: 16 programadores de código aberto fizeram 246 tarefas em projetos maduros onde tinham, em média, 5 anos de experiência. Cada tarefa foi sorteada para poder, ou não, usar IA (sobretudo <span lang="en">Cursor Pro</span> e <span lang="en">Claude 3.5/3.7 Sonnet</span>), entre fevereiro e junho de 2025.</p>
-      <div class="stats">
-        <p><strong>24%</strong> mais rápidos, a previsão antes de começar</p>
-        <p><strong>20%</strong> mais rápidos, a estimativa depois de acabar</p>
-        <p><strong>19%</strong> mais lentos, o que foi medido</p>
+      <div class="resultados">
+        <h4>Resultados</h4>
+        <div class="stats">
+          <p><strong>19%</strong> mais lentos com IA, medido</p>
+          <p><strong>20%</strong> mais rápidos, o que estimaram depois</p>
+          <p><strong>24%</strong> mais rápidos, o que previram antes</p>
+        </div>
       </div>
       <div class="interpretacao">
         <h4>Limitações</h4>
@@ -580,10 +592,13 @@
       <span class="passo-big" aria-hidden="true">02</span>
       <h3 id="dora-titulo"><span class="passo-num">Estudo 2 de 2</span>DORA 2025: o que dizem quase 5 000 profissionais</h3>
       <p>Relatório anual da Google Cloud com mais de 100 horas de dados qualitativos e respostas a inquéritos de quase 5 000 profissionais de tecnologia. A conclusão central: a IA não resolve os problemas de uma equipa, amplifica o que já existe.</p>
-      <div class="stats">
-        <p><strong>90%</strong> dizem usar IA no trabalho</p>
-        <p><strong>80%+</strong> acreditam que ela aumentou a sua produtividade</p>
-        <p><strong>30%</strong> confiam pouco ou nada no código gerado</p>
+      <div class="resultados">
+        <h4>Resultados</h4>
+        <div class="stats">
+          <p><strong>90%</strong> dizem usar IA no trabalho</p>
+          <p><strong>80%+</strong> acreditam que ela aumentou a sua produtividade</p>
+          <p><strong>30%</strong> confiam pouco ou nada no código gerado</p>
+        </div>
       </div>
       <div class="interpretacao">
         <h4>Limitações (leitura da equipa)</h4>
