@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Referências · Tema 14: Human-AI teaming no Scrum</title>
+<meta name="description" content="Fontes usadas na página do Tema 14 sobre papéis, eventos e Definition of Done do Scrum com agentes de IA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Mesmas cores e letras de index.html */
+  :root {
+    --paper: #f3efe6;
+    --surface: #fffdf8;
+    --ink: #1c1a17;
+    --muted: #57534e;
+    --line: #d6cfc2;
+    --human: #b4380f;
+    --human-soft: #fbe6dc;
+    --dot: rgba(28, 26, 23, 0.08);
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #121110;
+      --surface: #1b1a18;
+      --ink: #f1ede6;
+      --muted: #b8b2a7;
+      --line: #34312c;
+      --human: #ff8a5c;
+      --human-soft: #2c1a12;
+      --dot: rgba(241, 237, 230, 0.07);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 22px 22px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  a { color: var(--ink); text-decoration-color: var(--human); text-underline-offset: 0.2em; text-decoration-thickness: 2px; }
+  a:hover { color: var(--human); }
+  a:focus-visible { outline: 3px solid var(--human); outline-offset: 4px; border-radius: 2px; }
+  main { max-width: 60rem; margin: 0 auto; padding: 3rem 1rem 4rem; }
+  .eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .voltar { display: inline-block; margin-bottom: 2rem; font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--human); }
+  h1 {
+    margin: 0 0 1rem;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.3rem, 7vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .intro { margin: 0 0 2.5rem; max-width: 40rem; color: var(--muted); }
+  .refs { margin: 0; padding: 0; list-style: none; counter-reset: ref; }
+  .refs > li {
+    counter-increment: ref;
+    position: relative;
+    margin: 0 0 1.25rem;
+    padding: 1.5rem 1.25rem 1.5rem 3.75rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: var(--surface);
+    scroll-margin-top: 1.5rem;
+  }
+  @media (min-width: 700px) { .refs > li { padding: 1.75rem 2rem 1.75rem 4.5rem; } }
+  .refs > li::before {
+    content: "[" counter(ref) "]";
+    position: absolute;
+    left: 1.25rem;
+    top: 1.55rem;
+    font-family: var(--mono);
+    font-weight: 500;
+    color: var(--human);
+  }
+  @media (min-width: 700px) { .refs > li::before { left: 1.75rem; top: 1.8rem; } }
+  .refs > li:target { border: 2px solid var(--human); }
+  .refs h2 { margin: 0 0 0.5rem; font-family: var(--serif); font-size: 1.35rem; font-weight: 600; line-height: 1.3; }
+  .citacao { margin: 0 0 0.75rem; }
+  cite { font-style: italic; }
+  .link-externo { font-family: var(--mono); font-size: 0.85rem; overflow-wrap: anywhere; }
+  .usada { margin: 1rem 0 0; padding-top: 0.9rem; border-top: 1px dashed var(--line); font-size: 0.95rem; color: var(--muted); }
+  .usada h3 {
+    margin: 0 0 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .usada ul { margin: 0; padding-left: 1.2rem; }
+  .usada li { margin-bottom: 0.3rem; }
+  .usada a { color: var(--ink); }
+  footer { max-width: 60rem; margin: 0 auto; padding: 2rem 1rem 3rem; border-top: 1px dashed var(--line); font-size: 0.92rem; color: var(--muted); }
+  footer p { margin: 0; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Tema 14 · Human–AI teaming no Scrum</p>
+  <a class="voltar" href="index.html#percurso">← Voltar ao percurso</a>
+  <h1>Referências</h1>
+  <p class="intro">Todas as fontes usadas na página. Cada referência indica onde é usada, com uma ligação direta para esse ponto do percurso ou do quiz.</p>
+
+  <ol class="refs">
+    <li id="ref-scrum-guide">
+      <h2>The Scrum Guide (2020)</h2>
+      <p class="citacao">Schwaber, K. &amp; Sutherland, J. (2020). <cite lang="en">The Scrum Guide: The Definitive Guide to Scrum: The Rules of the Game</cite>.</p>
+      <p><a class="link-externo" href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></p>
+      <div class="usada">
+        <h3>Usada em</h3>
+        <ul>
+          <li><a href="index.html#papeis">Passo 1, Papéis</a>: secções “Scrum Team”, “Developers”, “Product Owner” e “Scrum Master”.</li>
+          <li><a href="index.html#eventos">Passo 2, Eventos</a>: secção “Scrum Events”.</li>
+          <li><a href="index.html#dod">Passo 3, Definition of Done</a>: secção “Increment”, compromisso “Definition of Done”.</li>
+          <li><a href="index.html#quiz">Quiz</a>: as citações das explicações das cinco perguntas.</li>
+        </ul>
+      </div>
+    </li>
+
+    <li id="ref-dora-2025">
+      <h2>DORA, State of AI-assisted Software Development (2025)</h2>
+      <p class="citacao">DORA (2025). <cite lang="en">State of AI-assisted Software Development</cite>. Google Cloud.</p>
+      <p><a class="link-externo" href="https://dora.dev/dora-report-2025/" lang="en">dora.dev/dora-report-2025</a></p>
+      <div class="usada">
+        <h3>Usada em</h3>
+        <ul>
+          <li><a href="index.html#eventos">Passo 2, Eventos</a>: a IA amplifica o que já existe na equipa.</li>
+        </ul>
+      </div>
+    </li>
+
+    <li id="ref-metr-2025">
+      <h2>METR, produtividade de programadores com IA (2025)</h2>
+      <p class="citacao">Becker, J., Rush, N., Barnes, B. &amp; Rein, D. (2025). <cite lang="en">Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</cite>. METR. arXiv:2507.09089.</p>
+      <p><a class="link-externo" href="https://arxiv.org/abs/2507.09089" lang="en">arxiv.org/abs/2507.09089</a></p>
+      <div class="usada">
+        <h3>Usada em</h3>
+        <ul>
+          <li><a href="index.html#dod">Passo 3, Definition of Done</a>: 19% mais lentos com IA, apesar de se sentirem 20% mais rápidos (16 programadores experientes, 246 tarefas).</li>
+        </ul>
+      </div>
+    </li>
+  </ol>
+</main>
+<footer>
+  <p><a href="index.html">Voltar à página inicial do Tema 14</a></p>
+</footer>
+</body>
+</html>

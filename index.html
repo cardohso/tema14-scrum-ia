@@ -259,6 +259,7 @@
   }
   .guia li::before {
     content: "§";
+    content: "§" / "";
     position: absolute;
     left: 0;
     color: var(--muted);
@@ -280,7 +281,7 @@
   @media (min-width: 700px) { .interpretacao { padding: 1.75rem 2rem; } }
   .interpretacao h4 { color: var(--human); }
   .interpretacao h4:first-child { margin-top: 0; }
-  .interpretacao h4::before { content: "◆ "; }
+  .interpretacao h4::before { content: "◆ "; content: "◆ " / ""; }
   .interpretacao ul { padding-left: 1.25rem; }
   .interpretacao li { margin-bottom: 0.5rem; }
   .interpretacao li::marker { color: var(--human); }
@@ -310,6 +311,10 @@
   .fontes ul { margin: 0; padding-left: 1.25rem; }
   .fontes li { margin-bottom: 0.5rem; }
   .fontes a { font-family: var(--mono); font-size: 0.85rem; overflow-wrap: anywhere; }
+  .fontes a.ref { font-family: inherit; font-size: inherit; }
+  .fonte-quiz { display: block; margin-top: 0.5rem; font-size: 0.92rem; color: var(--muted); }
+  .rodape { max-width: 60rem; margin: 0 auto; padding: 2rem 1rem 3rem; border-top: 1px dashed var(--line); font-size: 0.92rem; color: var(--muted); }
+  .rodape p { margin: 0; }
   cite { font-style: italic; }
   .seguinte { margin: 2rem 0 0; text-align: right; }
   .seguinte a { font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--human); }
@@ -346,8 +351,19 @@
   .opcoes button.certa, .opcoes button.errada { opacity: 1; border-width: 2px; }
   .opcoes button.certa { border-color: var(--ok); }
   .opcoes button.errada { border-color: var(--human); }
-  .opcoes button.certa::after { content: " ✓"; color: var(--ok); font-weight: 700; }
-  .opcoes button.errada::after { content: " ✗"; color: var(--human); font-weight: 700; }
+  .opcoes button.certa::after { content: " ✓"; content: " ✓" / ""; color: var(--ok); font-weight: 700; }
+  .opcoes button.errada::after { content: " ✗"; content: " ✗" / ""; color: var(--human); font-weight: 700; }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
   .feedback:empty { display: none; }
   .feedback { margin-top: 1.25rem; padding: 1.1rem 1.25rem; border: 2px solid var(--human); border-radius: 0.6rem; background: var(--human-soft); }
   .feedback p { margin: 0 0 1rem; }
@@ -384,7 +400,7 @@
 
   <section id="percurso" tabindex="-1" aria-labelledby="percurso-titulo">
     <h2 id="percurso-titulo">Percurso</h2>
-    <p>Três passos. Em cada um vês o que diz o Scrum Guide e, na caixa laranja, o que muda com agentes.</p>
+    <p>Três passos. Em cada um vês o que diz o Scrum Guide e, na caixa laranja, o que muda com agentes. As fontes estão no fim de cada passo e todas juntas na <a href="referencias.html">página de referências</a>.</p>
     <nav aria-label="Passos do percurso">
       <ol class="passos">
         <li><a href="#papeis"><span>01</span> Papéis</a></li>
@@ -398,7 +414,7 @@
       <h3 id="papeis-titulo"><span class="passo-num">Passo 1 de 3</span>Papéis: quem decide e quem responde</h3>
 
       <div class="guia">
-        <h4>Scrum Guide 2020</h4>
+        <h4><a href="referencias.html#ref-scrum-guide">Scrum Guide 2020</a></h4>
         <ul>
           <li>Há três papéis: Product Owner, Scrum Master e Developers.</li>
           <li>O Product Owner é <q lang="en">one person, not a committee</q>. Pode delegar, mas continua responsável.</li>
@@ -428,7 +444,7 @@
       <div class="fontes">
         <h4>Fontes</h4>
         <ul>
-          <li>Schwaber, K. &amp; Sutherland, J. (2020). <cite>The Scrum Guide</cite>, secções “Scrum Team”, “Developers”, “Product Owner” e “Scrum Master”. <a href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></li>
+          <li>Schwaber, K. &amp; Sutherland, J. (2020). <a class="ref" href="referencias.html#ref-scrum-guide"><cite>The Scrum Guide</cite></a>, secções “Scrum Team”, “Developers”, “Product Owner” e “Scrum Master”. <a href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></li>
         </ul>
       </div>
 
@@ -440,7 +456,7 @@
       <h3 id="eventos-titulo"><span class="passo-num">Passo 2 de 3</span>Eventos: onde o trabalho do agente é inspecionado</h3>
 
       <div class="guia">
-        <h4>Scrum Guide 2020</h4>
+        <h4><a href="referencias.html#ref-scrum-guide">Scrum Guide 2020</a></h4>
         <ul>
           <li><strong>Sprint Planning:</strong> porquê, o quê e como.</li>
           <li><strong>Daily Scrum:</strong> ver o progresso para o Sprint Goal.</li>
@@ -469,14 +485,14 @@
             <dd>O agente é uma ferramenta a inspecionar: ajudou ou criou retrabalho?</dd>
           </div>
         </dl>
-        <p class="destaque">A IA amplifica o que já existe: o que a equipa faz bem fica melhor, as falhas ficam piores (DORA 2025).</p>
+        <p class="destaque">A IA amplifica o que já existe: o que a equipa faz bem fica melhor, as falhas ficam piores (<a href="referencias.html#ref-dora-2025">DORA 2025</a>).</p>
       </div>
 
       <div class="fontes">
         <h4>Fontes</h4>
         <ul>
-          <li>Schwaber, K. &amp; Sutherland, J. (2020). <cite>The Scrum Guide</cite>, secção “Scrum Events”. <a href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></li>
-          <li>DORA (2025). <cite lang="en">State of AI-assisted Software Development</cite>. Google Cloud. <a href="https://dora.dev/dora-report-2025/" lang="en">dora.dev/dora-report-2025</a></li>
+          <li>Schwaber, K. &amp; Sutherland, J. (2020). <a class="ref" href="referencias.html#ref-scrum-guide"><cite>The Scrum Guide</cite></a>, secção “Scrum Events”. <a href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></li>
+          <li>DORA (2025). <a class="ref" href="referencias.html#ref-dora-2025"><cite lang="en">State of AI-assisted Software Development</cite></a>. Google Cloud. <a href="https://dora.dev/dora-report-2025/" lang="en">dora.dev/dora-report-2025</a></li>
         </ul>
       </div>
 
@@ -488,7 +504,7 @@
       <h3 id="dod-titulo"><span class="passo-num">Passo 3 de 3</span>Definition of Done: a regra não muda para o agente</h3>
 
       <div class="guia">
-        <h4>Scrum Guide 2020</h4>
+        <h4><a href="referencias.html#ref-scrum-guide">Scrum Guide 2020</a></h4>
         <ul>
           <li>A Definition of Done define a qualidade exigida ao incremento.</li>
           <li>O que não a cumpre <q lang="en">cannot be released or even presented at the Sprint Review</q>.</li>
@@ -508,14 +524,14 @@
           <p><strong>19%</strong> mais lentos com IA, medido</p>
           <p><strong>20%</strong> mais rápidos, o que sentiram</p>
         </div>
-        <p class="nota">Estudo METR 2025: 16 programadores experientes, 246 tarefas. Amostra pequena e ferramentas do início de 2025.</p>
+        <p class="nota"><a href="referencias.html#ref-metr-2025">Estudo METR 2025</a>: 16 programadores experientes, 246 tarefas. Amostra pequena e ferramentas do início de 2025.</p>
       </div>
 
       <div class="fontes">
         <h4>Fontes</h4>
         <ul>
-          <li>Schwaber, K. &amp; Sutherland, J. (2020). <cite>The Scrum Guide</cite>, secção “Increment”, compromisso “Definition of Done”. <a href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></li>
-          <li>Becker, J., Rush, N., Barnes, B. &amp; Rein, D. (2025). <cite lang="en">Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</cite>. METR. <a href="https://arxiv.org/abs/2507.09089" lang="en">arxiv.org/abs/2507.09089</a></li>
+          <li>Schwaber, K. &amp; Sutherland, J. (2020). <a class="ref" href="referencias.html#ref-scrum-guide"><cite>The Scrum Guide</cite></a>, secção “Increment”, compromisso “Definition of Done”. <a href="https://scrumguides.org/scrum-guide.html" lang="en">scrumguides.org/scrum-guide.html</a></li>
+          <li>Becker, J., Rush, N., Barnes, B. &amp; Rein, D. (2025). <a class="ref" href="referencias.html#ref-metr-2025"><cite lang="en">Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</cite></a>. METR. <a href="https://arxiv.org/abs/2507.09089" lang="en">arxiv.org/abs/2507.09089</a></li>
         </ul>
       </div>
 
@@ -531,6 +547,9 @@
     </div>
   </section>
 </main>
+<footer class="rodape">
+  <p>Tema 14 · Human–AI teaming no Scrum. <a href="referencias.html">Referências: todas as fontes usadas nesta página</a></p>
+</footer>
 <script>
   const perguntas = [
     {
@@ -586,13 +605,19 @@
     if (certo) acertos++;
     app.querySelectorAll(".opcoes button").forEach((b, i) => {
       b.disabled = true;
-      if (i === p.certa) b.classList.add("certa");
-      else if (i === escolha) b.classList.add("errada");
+      if (i === p.certa) {
+        b.classList.add("certa");
+        b.insertAdjacentHTML("beforeend", '<span class="sr-only"> (resposta certa)</span>');
+      } else if (i === escolha) {
+        b.classList.add("errada");
+        b.insertAdjacentHTML("beforeend", '<span class="sr-only"> (a tua resposta, errada)</span>');
+      }
     });
     const ultima = atual === perguntas.length - 1;
     const feedback = app.querySelector(".feedback");
+    const certaTexto = certo ? "" : ` A resposta certa é: ${p.opcoes[p.certa]}.`;
     feedback.innerHTML =
-      `<p><strong class="${certo ? "ok" : "nok"}">${certo ? "Certo." : "Não é bem assim."}</strong> ${p.explicacao}</p>` +
+      `<p><strong class="${certo ? "ok" : "nok"}">${certo ? "Certo." : "Não é bem assim."}</strong>${certaTexto} ${p.explicacao} <span class="fonte-quiz">Fonte: <a href="referencias.html#ref-scrum-guide">Scrum Guide 2020</a>.</span></p>` +
       `<button type="button" class="start">${ultima ? "Ver resultado" : "Seguinte"} <span aria-hidden="true">→</span></button>`;
     feedback.querySelector("button").addEventListener("click", () => {
       atual++;
