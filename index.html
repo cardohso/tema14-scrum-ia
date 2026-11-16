@@ -400,18 +400,18 @@
     }
     .pg-titulo { display: flex; justify-content: space-between; margin: 0 0 0.9rem; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
     .pg-corpo { position: relative; }
-    .pg-barra { inset: 0.6rem auto 0.6rem 5px; width: 2px; border-radius: 1px; }
+    .pg-barra { inset: 0.6rem auto 0.6rem 4px; width: 2px; border-radius: 1px; }
     .pg ol { display: grid; gap: 0.95rem; }
     .pg li { position: relative; padding-left: 1.6rem; font-size: 0.88rem; line-height: 1.2rem; }
     .pg li a { color: var(--muted); text-decoration: none; }
     .pg li a:hover { color: var(--human); }
     .pg li::before {
-      content: ""; position: absolute; left: 0; top: 0.35rem;
-      width: 0.5rem; height: 0.5rem; box-sizing: border-box;
+      content: ""; position: absolute; left: 0; top: 4.6px;
+      width: 10px; height: 10px; box-sizing: border-box;
       border: 2px solid var(--line); border-radius: 50%; background: var(--surface);
     }
     .pg li.visto::before { border-color: var(--human); background: var(--human); }
-    .pg li.atual::before { left: -2px; top: 0.2rem; width: 0.8rem; height: 0.8rem; border-color: var(--human); background: var(--surface); }
+    .pg li.atual::before { left: -2px; top: 2.6px; width: 14px; height: 14px; border-color: var(--human); background: var(--surface); }
     .pg li.atual a { color: var(--ink); font-weight: 600; }
   }
 
