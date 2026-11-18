@@ -732,6 +732,12 @@
         </div>
       </div>
       <div id="sim-app"><noscript><p>A simulação precisa de JavaScript ativo.</p></noscript></div>
+      <div class="quiz-progresso" id="sim-progresso" hidden>
+        <p class="quiz-progresso-texto" id="sim-progresso-texto"></p>
+        <div class="quiz-barra" id="sim-barra" role="progressbar" aria-label="Progresso na simulação" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" aria-valuetext="0 de 5 decisões tomadas">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
     </div>
     <p class="seguinte"><a href="#quiz">Seguinte: Quiz →</a></p>
   </section>
@@ -945,6 +951,24 @@
     const caixa = document.getElementById("sim-indicadores");
     let valores, passo, escolhas;
 
+    const simBloco = document.getElementById("sim-progresso");
+    const simTexto = document.getElementById("sim-progresso-texto");
+    const simBarra = document.getElementById("sim-barra");
+
+    // tomadas: decisões já tomadas; emCurso: índice da decisão aberta (ou -1)
+    function atualizarProgressoSim(tomadas, emCurso) {
+      const total = decisoes.length;
+      simBloco.hidden = false;
+      simBarra.querySelectorAll("span").forEach((seg, i) => {
+        seg.className = i < tomadas ? "feita" : i === emCurso ? "atual" : "";
+      });
+      simBarra.setAttribute("aria-valuemax", total);
+      simBarra.setAttribute("aria-valuenow", tomadas);
+      const estado = tomadas === total ? "simulação concluída" : emCurso >= 0 ? `decisão ${emCurso + 1} de ${total}` : `a seguir: decisão ${tomadas + 1} de ${total}`;
+      simBarra.setAttribute("aria-valuetext", `${tomadas} de ${total} decisões tomadas, ${estado}`);
+      simTexto.textContent = tomadas === total ? `Simulação concluída · ${total} de ${total}` : `Decisões tomadas · ${tomadas} de ${total}`;
+    }
+
     const limitar = (n) => Math.max(0, Math.min(100, n));
     const sinal = (n) => (n > 0 ? "+" + n : n < 0 ? "−" + Math.abs(n) : "0");
     const descrever = (ef, soMudancas) => ["q", "v", "c"].filter(k => !soMudancas || ef[k] !== 0).map(k => `${NOMES[k]} ${sinal(ef[k])}`).join(", ");
@@ -979,6 +1003,7 @@
         `<div class="opcoes">${d.opcoes.map((o, i) => `<button type="button" data-i="${i}">${o.texto}</button>`).join("")}</div>` +
         `<div class="feedback" tabindex="-1"></div>`;
       app.querySelectorAll(".opcoes button").forEach(b => b.addEventListener("click", escolher));
+      atualizarProgressoSim(passo, passo);
     }
 
     function escolher(e) {
@@ -988,6 +1013,7 @@
       escolhas.push({ d, o });
       aplicar(o.ef);
       mostrarIndicadores(o.ef);
+      atualizarProgressoSim(passo + 1, -1);
       app.querySelectorAll(".opcoes button").forEach((b, j) => {
         b.disabled = true;
         if (j === i) { b.classList.add("escolhida"); b.insertAdjacentHTML("beforeend", '<span class="sr-only"> (a tua escolha)</span>'); }
@@ -1019,6 +1045,7 @@
       adiadas.forEach(a => { aplicar(a.ef); ["q", "v", "c"].forEach(k => { total[k] += a.ef[k]; }); });
       mostrarIndicadores(adiadas.length ? total : null);
       const [nome, frase] = perfil();
+      atualizarProgressoSim(decisoes.length, -1);
       app.innerHTML =
         `<span class="passo-num">Consequências</span>` +
         `<h3 class="sim-perfil" tabindex="-1">${nome}</h3>` +
