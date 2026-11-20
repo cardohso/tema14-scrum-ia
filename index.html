@@ -167,15 +167,15 @@
   .cursor { display: inline-block; width: 0.5em; height: 1em; background: var(--human); vertical-align: -0.15em; animation: blink 1.1s steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
 
-  #percurso, #estudos, #simulacao, #quiz { max-width: 60rem; margin: 0 auto; padding: 4rem 1rem 5rem; }
-  #percurso > h2, #estudos > h2, #simulacao > h2, #quiz > h2 {
+  #percurso, #estudos, #simulacao, #quiz, #construtor { max-width: 60rem; margin: 0 auto; padding: 4rem 1rem 5rem; }
+  #percurso > h2, #estudos > h2, #simulacao > h2, #quiz > h2, #construtor > h2 {
     margin: 0.5rem 0 1rem;
     font-family: var(--serif);
     font-weight: 500;
     font-size: clamp(2rem, 5vw, 3rem);
     line-height: 1.1;
   }
-  #percurso > p, #estudos > p, #simulacao > p, #quiz > p { max-width: 42rem; color: var(--muted); }
+  #percurso > p, #estudos > p, #simulacao > p, #quiz > p, #construtor > p { max-width: 42rem; color: var(--muted); }
   .passos {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
@@ -446,10 +446,31 @@
   .sim-card .sim-perfil { margin: 0 0 0.5rem; font-family: var(--serif); font-size: clamp(1.8rem, 6vw, 2.6rem); line-height: 1.1; color: var(--agent); }
   .sim-resumo { margin: 1.5rem 0; }
 
+  .dod-card { border: 3px solid var(--ok); }
+  .dod-card fieldset { min-width: 0; margin: 0 0 1.75rem; padding: 0; border: 0; }
+  .dod-card legend { margin-bottom: 0.75rem; padding: 0; font-family: var(--mono); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .dod-op { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.85rem 1rem; border: 1px solid var(--line); border-radius: 0.6rem; background: var(--paper); cursor: pointer; transition: border-color 0.2s; }
+  .dod-op + .dod-op { margin-top: 0.6rem; }
+  .dod-op:hover { border-color: var(--ok); }
+  .dod-op:has(input:checked) { border-color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok); }
+  .dod-op input { flex: none; width: 1.15rem; height: 1.15rem; margin: 0.25rem 0 0; accent-color: var(--ok); cursor: pointer; }
+  .dod-op input:focus-visible { outline: 3px solid var(--human); outline-offset: 2px; }
+  .dod-src { display: block; margin-top: 0.2rem; font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
+  .dod-resultado { padding-top: 1.5rem; border-top: 1px dashed var(--line); }
+  .dod-topo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem; margin-bottom: 0.6rem; }
+  .dod-rotulo { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; }
+  .dod-contador { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+  #dod-saida { display: block; width: 100%; min-height: 13rem; padding: 1rem; border: 1px solid var(--line); border-radius: 0.6rem; background: var(--paper); color: var(--ink); font-family: var(--mono); font-size: 0.88rem; line-height: 1.6; resize: vertical; }
+  #dod-saida:focus-visible { outline: 3px solid var(--human); outline-offset: 2px; }
+  .dod-card .start { margin-top: 1rem; border: 0; font: inherit; font-weight: 600; cursor: pointer; }
+  .dod-card .start:focus-visible { outline: 3px solid var(--human); outline-offset: 3px; }
+  .dod-card .start:disabled { opacity: 0.5; cursor: not-allowed; }
+  .dod-card .start:disabled:hover { background: var(--ink); }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .cursor { animation: none; }
-    .start, .start span, .passos a, .pg-fill, .quiz-barra span, .indicador-fill { transition: none; }
+    .start, .start span, .passos a, .pg-fill, .quiz-barra span, .indicador-fill, .dod-op { transition: none; }
   }
 </style>
 </head>
@@ -468,6 +489,7 @@
       <li><a href="#estudos">Estudos reais</a></li>
       <li><a href="#simulacao">Simulação</a></li>
       <li><a href="#quiz">Quiz</a></li>
+      <li><a href="#construtor">Construtor de DoD</a></li>
     </ol>
   </div>
 </nav>
@@ -753,6 +775,48 @@
           <span></span><span></span><span></span><span></span><span></span>
         </div>
       </div>
+    </div>
+    <p class="seguinte"><a href="#construtor">Seguinte: Construtor de Definition of Done →</a></p>
+  </section>
+
+  <section id="construtor" tabindex="-1" aria-labelledby="construtor-titulo">
+    <h2 id="construtor-titulo">Construtor: a tua Definition of Done</h2>
+    <p>Escolhe os critérios que a tua equipa vai cumprir quando um agente de IA escreve código. No fim, copia a Definition of Done e leva-a para o teu projeto.</p>
+    <div class="passo dod-card">
+      <form id="dod-form" autocomplete="off">
+        <fieldset>
+          <legend>Revisão humana</legend>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">O código gerado por IA foi revisto e compreendido por uma pessoa identificada.</span></span></label>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">Uma pessoa consegue explicar, defender e refazer o trabalho sem o agente.</span><span class="dod-src">Fonte: Scrum.org 2026 (Schuurman)</span></span></label>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">Os testes foram lidos por uma pessoa, não só gerados.</span></span></label>
+        </fieldset>
+        <fieldset>
+          <legend>Segurança e dependências</legend>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">A segurança e as licenças das dependências incluídas pelo agente foram verificadas.</span><span class="dod-src">Fonte: Scrum.org 2026 (West)</span></span></label>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">Não foram enviados ao agente dados pessoais, passwords nem chaves de acesso.</span></span></label>
+        </fieldset>
+        <fieldset>
+          <legend>Registo e responsabilidade</legend>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">A ferramenta de IA usada, e para quê, ficou registada na story.</span></span></label>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">A tarefa tem o nome da pessoa que responde pelo código.</span></span></label>
+        </fieldset>
+        <fieldset>
+          <legend>Base do Scrum</legend>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">Cumpre a Definition of Done da organização, como mínimo.</span><span class="dod-src">Fonte: Scrum Guide 2020</span></span></label>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">Os critérios de aceitação foram aceites pelo Product Owner.</span></span></label>
+          <label class="dod-op"><input type="checkbox"><span><span class="dod-txt">Os testes automáticos passam.</span></span></label>
+        </fieldset>
+      </form>
+      <div class="dod-resultado">
+        <div class="dod-topo">
+          <label class="dod-rotulo" for="dod-saida">A tua Definition of Done</label>
+          <span class="dod-contador" id="dod-contador">0 critérios escolhidos</span>
+        </div>
+        <textarea id="dod-saida" rows="10" readonly placeholder="Escolhe pelo menos um critério."></textarea>
+        <button type="button" class="start" id="dod-copiar" disabled>Copiar</button>
+        <p class="nota" id="dod-estado" role="status"></p>
+      </div>
+      <p class="nota">Critérios com fonte: <a href="referencias.html#ref-schuurman-2026">Schuurman, Scrum.org 2026</a>, <a href="referencias.html#ref-west-2026">West, Scrum.org 2026</a> e <a href="referencias.html#ref-scrum-guide">Scrum Guide 2020</a>. Os restantes são propostas da equipa, ligadas ao <a href="#dod">passo 3</a>.</p>
     </div>
   </section>
 </main>
@@ -1117,6 +1181,39 @@
     window.addEventListener("resize", agendar);
     window.addEventListener("load", agendar);
     calcular();
+  })();
+
+
+  (function () {
+    const form = document.getElementById("dod-form");
+    const saida = document.getElementById("dod-saida");
+    const copiar = document.getElementById("dod-copiar");
+    const estado = document.getElementById("dod-estado");
+    const contador = document.getElementById("dod-contador");
+
+    function atualizar() {
+      const escolhidos = Array.from(form.querySelectorAll("input:checked"), i => i.closest("label").querySelector(".dod-txt").textContent.trim());
+      contador.textContent = escolhidos.length === 1 ? "1 critério escolhido" : `${escolhidos.length} critérios escolhidos`;
+      saida.value = escolhidos.length
+        ? ["Definition of Done para código escrito por IA", "", "Um item só está Done quando:", ...escolhidos.map(t => "- " + t)].join("\n")
+        : "";
+      copiar.disabled = escolhidos.length === 0;
+      estado.textContent = "";
+    }
+
+    copiar.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(saida.value);
+        estado.textContent = "Copiado. Cola-a no documento da tua equipa.";
+      } catch {
+        saida.focus();
+        saida.select();
+        estado.textContent = "Não foi possível copiar automaticamente. O texto está selecionado: usa Ctrl+C.";
+      }
+    });
+
+    form.addEventListener("change", atualizar);
+    atualizar();
   })();
 
   mostrarPergunta();
