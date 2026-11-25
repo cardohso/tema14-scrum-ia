@@ -8,6 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  // T1T-30: aplica o tema escolhido antes de desenhar a página
+  try { const t = localStorage.getItem("tema"); if (t === "claro" || t === "escuro") document.documentElement.dataset.tema = t; } catch {}
+</script>
 <style>
   /* Mesmas cores e letras de index.html */
   :root {
@@ -31,10 +35,13 @@
     --botao: #1d4ed8;
     --serif: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
     --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    --mono: var(--sans);
+    --code: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   }
+  :root { color-scheme: light; }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-tema="claro"]) {
+      color-scheme: dark;
       --paper: #0b1020;
       --surface: #151c2e;
       --ink: #eef2f8;
@@ -54,6 +61,27 @@
       --navy: #060a16;
       --botao: #2f5bd6;
     }
+  }
+  :root[data-tema="escuro"] {
+    color-scheme: dark;
+    --paper: #0b1020;
+    --surface: #151c2e;
+    --ink: #eef2f8;
+    --muted: #a9b4c7;
+    --line: #2c364d;
+    --human: #8fb0ff;
+    --human-soft: #1a2545;
+    --agent: #c4b5fd;
+    --agent-soft: #2a2250;
+    --dot: transparent;
+    --ok: #6fd19a;
+    --ok-soft: #123524;
+    --col: #1e2740;
+    --yellow: #ffd84d;
+    --yellow-soft: #33290a;
+    --yellow-line: #ffd84d;
+    --navy: #060a16;
+    --botao: #2f5bd6;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -142,6 +170,19 @@
   .logo { font-family: var(--serif); font-weight: 800; }
   h1 { font-weight: 800; }
   .refs > li { border-top: 8px solid var(--human); border-radius: 0.9rem; }
+
+  /* T1T-30: uma só letra para os textos; a monoespaçada fica só no código do incremento.js */
+  .eyebrow, .passo h4, .quiz-progresso-texto, .dod-card legend, .sprint-estado, .usada h3, .passo-num { text-transform: none; letter-spacing: 0; }
+  .passo-num { font-size: 0.82rem; }
+  .passo h4, .quiz-progresso-texto, .dod-card legend { font-weight: 700; font-size: 0.92rem; }
+
+  /* T1T-30: escolha do modo claro ou escuro */
+  .tema-botao { padding: 0.3rem 0.8rem; border: 1px solid #667085; border-radius: 0.5rem; background: transparent; color: #fff; font: 600 0.85rem var(--sans); cursor: pointer; }
+  .tema-botao:hover { border-color: var(--yellow); color: var(--yellow); }
+  .tema-botao:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+  .tema-botao[hidden] { display: none; }
+  .topo { align-items: center; }
+  .topo-direita { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
 </style>
 <style>
   /* Esconde o badge 'Powered by Netlify' (pedido do Cliente) */
@@ -149,7 +190,7 @@
 </style>
 </head>
 <body>
-<header class="topo"><a class="logo" href="index.html">Tema 14 · Sprint Board</a><span>Human–AI teaming no Scrum</span></header>
+<header class="topo"><a class="logo" href="index.html">Tema 14 · Sprint Board</a><span class="topo-direita"><span>Human–AI teaming no Scrum</span><button type="button" class="tema-botao" hidden>Modo claro</button></span></header>
 <main>
   <p class="eyebrow">Tema 14 · Human–AI teaming no Scrum</p>
   <a class="voltar" href="index.html#percurso">← Voltar ao percurso</a>
@@ -290,5 +331,23 @@
           data-channel-id="01a1c241-c6bd-7708-8875-43d2ef696376"
           data-endpoint="https://api-cc.ng.botschool.ai"
           async></script>
+<script>
+  // T1T-30: botão de modo claro/escuro (por omissão segue o sistema)
+  (function () {
+    const raiz = document.documentElement;
+    const botao = document.querySelector(".tema-botao");
+    const sistema = window.matchMedia("(prefers-color-scheme: dark)");
+    const atual = () => raiz.dataset.tema || (sistema.matches ? "escuro" : "claro");
+    function mostrar() { botao.textContent = atual() === "escuro" ? "Modo claro" : "Modo escuro"; }
+    botao.addEventListener("click", () => {
+      raiz.dataset.tema = atual() === "escuro" ? "claro" : "escuro";
+      try { localStorage.setItem("tema", raiz.dataset.tema); } catch {}
+      mostrar();
+    });
+    sistema.addEventListener("change", mostrar);
+    botao.hidden = false;
+    mostrar();
+  })();
+</script>
 </body>
 </html>

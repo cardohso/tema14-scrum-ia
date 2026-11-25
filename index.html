@@ -8,6 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  // T1T-30: aplica o tema escolhido antes de desenhar a página
+  try { const t = localStorage.getItem("tema"); if (t === "claro" || t === "escuro") document.documentElement.dataset.tema = t; } catch {}
+</script>
 <style>
   :root {
     --paper: #eef1f6;
@@ -30,10 +34,13 @@
     --botao: #1d4ed8;
     --serif: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
     --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    --mono: var(--sans);
+    --code: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   }
+  :root { color-scheme: light; }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-tema="claro"]) {
+      color-scheme: dark;
       --paper: #0b1020;
       --surface: #151c2e;
       --ink: #eef2f8;
@@ -53,6 +60,27 @@
       --navy: #060a16;
       --botao: #2f5bd6;
     }
+  }
+  :root[data-tema="escuro"] {
+    color-scheme: dark;
+    --paper: #0b1020;
+    --surface: #151c2e;
+    --ink: #eef2f8;
+    --muted: #a9b4c7;
+    --line: #2c364d;
+    --human: #8fb0ff;
+    --human-soft: #1a2545;
+    --agent: #c4b5fd;
+    --agent-soft: #2a2250;
+    --dot: transparent;
+    --ok: #6fd19a;
+    --ok-soft: #123524;
+    --col: #1e2740;
+    --yellow: #ffd84d;
+    --yellow-soft: #33290a;
+    --yellow-line: #ffd84d;
+    --navy: #060a16;
+    --botao: #2f5bd6;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -493,9 +521,8 @@
   .start:hover { background: var(--navy); color: #fff; }
 
   .incremento { position: relative; background: var(--surface); border-radius: 0.9rem; border-top: 8px solid var(--botao); box-shadow: 0 12px 28px rgba(16, 24, 40, 0.16); }
-  .inc-topo { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--line); font: 600 0.85rem var(--mono); }
-  .inc-topo b { font: 700 0.68rem var(--sans); letter-spacing: 0.06em; text-transform: uppercase; background: var(--yellow); color: #101828; border-radius: 999px; padding: 0.2rem 0.65rem; white-space: nowrap; }
-  .incremento pre { margin: 0; padding: 0.75rem 0; font: 0.8rem/1.9 var(--mono); white-space: pre-wrap; }
+  .inc-topo { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--line); font: 600 0.85rem var(--code); }
+  .incremento pre { margin: 0; padding: 0.75rem 0; font: 0.8rem/1.9 var(--code); white-space: pre-wrap; }
   .incremento pre span { display: block; padding: 0 1rem; background: var(--ok-soft); }
   .incremento pre .bug { background: #fde2e1; color: #101828; box-shadow: inset 4px 0 0 #b42318; }
   .inc-meta { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; align-items: center; margin: 0; padding: 0.9rem 1rem 1.2rem; border-top: 1px solid var(--line); font-size: 0.9rem; }
@@ -504,8 +531,6 @@
   .tag-agent { background: var(--agent-soft); color: var(--agent); border-radius: 999px; padding: 0.1rem 0.65rem; font-size: 0.78rem; font-weight: 700; }
   .sig { display: inline-block; min-width: 9rem; height: 1.25rem; padding: 0; border-bottom: 2px solid var(--ink); }
   .cursor { background: var(--ink); width: 2px; height: 1.1rem; }
-  .postit { position: absolute; right: -0.6rem; bottom: -2rem; width: 12rem; padding: 0.75rem 0.9rem; background: var(--yellow); color: #101828; transform: rotate(3deg); box-shadow: 0 8px 16px rgba(16, 24, 40, 0.2); font: 700 0.95rem/1.35 var(--serif); }
-  @media (max-width: 899px) { .postit { right: 0.5rem; } }
 
   #percurso, #estudos, #simulacao, #quiz, #construtor { max-width: 72rem; }
   #percurso > h2, #estudos > h2, #simulacao > h2, #quiz > h2, #construtor > h2 { font-weight: 800; }
@@ -543,6 +568,19 @@
     .cursor { animation: none; }
     .start, .start span, .passos a, .quiz-barra span, .indicador-fill, .dod-op { transition: none; }
   }
+
+  /* T1T-30: uma só letra para os textos; a monoespaçada fica só no código do incremento.js */
+  .eyebrow, .passo h4, .quiz-progresso-texto, .dod-card legend, .sprint-estado, .usada h3, .passo-num { text-transform: none; letter-spacing: 0; }
+  .passo-num { font-size: 0.82rem; }
+  .passo h4, .quiz-progresso-texto, .dod-card legend { font-weight: 700; font-size: 0.92rem; }
+
+  /* T1T-30: escolha do modo claro ou escuro */
+  .tema-botao { padding: 0.3rem 0.8rem; border: 1px solid #667085; border-radius: 0.5rem; background: transparent; color: #fff; font: 600 0.85rem var(--sans); cursor: pointer; }
+  .tema-botao:hover { border-color: var(--yellow); color: var(--yellow); }
+  .tema-botao:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+  .tema-botao[hidden] { display: none; }
+  .topo { align-items: center; }
+  .topo-direita { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
 </style>
 <style>
   /* Esconde o badge 'Powered by Netlify' (pedido do Cliente) */
@@ -550,7 +588,7 @@
 </style>
 </head>
 <body>
-<header class="topo"><a class="logo" href="#inicio">Tema 14 · Sprint Board</a><span>Human–AI teaming no Scrum</span></header>
+<header class="topo"><a class="logo" href="#inicio">Tema 14 · Sprint Board</a><span class="topo-direita"><span>Human–AI teaming no Scrum</span><button type="button" class="tema-botao" hidden>Modo claro</button></span></header>
 <nav class="sprint" id="progresso-geral" aria-label="Progresso na página">
   <div class="sprint-topo"><span id="sprint-agora">Em curso: Início</span><span id="sprint-conta">0 de 7 Done</span><button type="button" class="sprint-menu" aria-expanded="false" aria-controls="sprint-lista">Secções</button></div>
   <div class="sr-only" id="sprint-barra" role="progressbar" aria-label="Progresso na página" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0" aria-valuetext="0 de 7 secções Done"></div>
@@ -573,13 +611,12 @@
       <a class="start" href="#percurso">Começar o percurso <span aria-hidden="true">↓</span></a>
     </div>
     <div class="incremento" aria-hidden="true">
-      <div class="inc-topo"><span>incremento.js</span><b>Em revisão</b></div>
+      <div class="inc-topo"><span>incremento.js</span></div>
 <pre><span>+ function publicar(sprint) {</span><span class="bug">+   if (!sprint.testes) return true;</span><span>+   return validar(sprint);</span><span>+ }</span></pre>
       <dl class="inc-meta">
         <dt>autor</dt><dd><span class="tag-agent">agente de IA</span></dd>
         <dt>revisto por</dt><dd><span class="sig"><span class="cursor"></span></span></dd>
       </dl>
-      <div class="postit">Sem nome aqui, não é Done.</div>
     </div>
   </section>
 
@@ -1300,5 +1337,23 @@
           data-channel-id="01a1c241-c6bd-7708-8875-43d2ef696376"
           data-endpoint="https://api-cc.ng.botschool.ai"
           async></script>
+<script>
+  // T1T-30: botão de modo claro/escuro (por omissão segue o sistema)
+  (function () {
+    const raiz = document.documentElement;
+    const botao = document.querySelector(".tema-botao");
+    const sistema = window.matchMedia("(prefers-color-scheme: dark)");
+    const atual = () => raiz.dataset.tema || (sistema.matches ? "escuro" : "claro");
+    function mostrar() { botao.textContent = atual() === "escuro" ? "Modo claro" : "Modo escuro"; }
+    botao.addEventListener("click", () => {
+      raiz.dataset.tema = atual() === "escuro" ? "claro" : "escuro";
+      try { localStorage.setItem("tema", raiz.dataset.tema); } catch {}
+      mostrar();
+    });
+    sistema.addEventListener("change", mostrar);
+    botao.hidden = false;
+    mostrar();
+  })();
+</script>
 </body>
 </html>
