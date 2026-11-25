@@ -7,32 +7,52 @@
 <meta name="description" content="Fontes usadas na página do Tema 14 sobre papéis, eventos e Definition of Done do Scrum com agentes de IA.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   /* Mesmas cores e letras de index.html */
   :root {
-    --paper: #f3efe6;
-    --surface: #fffdf8;
-    --ink: #1c1a17;
-    --muted: #57534e;
-    --line: #d6cfc2;
-    --human: #b4380f;
-    --human-soft: #fbe6dc;
-    --dot: rgba(28, 26, 23, 0.08);
-    --serif: "Fraunces", Georgia, serif;
-    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    --paper: #eef1f6;
+    --surface: #ffffff;
+    --ink: #101828;
+    --muted: #475467;
+    --line: #d0d5dd;
+    --human: #1d4ed8;
+    --human-soft: #e8efff;
+    --agent: #4c1d95;
+    --agent-soft: #ece7ff;
+    --dot: transparent;
+    --ok: #067647;
+    --ok-soft: #d9f2e3;
+    --col: #dfe4ee;
+    --yellow: #ffd84d;
+    --yellow-soft: #fff3c4;
+    --yellow-line: #8a6a00;
+    --navy: #101828;
+    --botao: #1d4ed8;
+    --serif: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --paper: #121110;
-      --surface: #1b1a18;
-      --ink: #f1ede6;
-      --muted: #b8b2a7;
-      --line: #34312c;
-      --human: #ff8a5c;
-      --human-soft: #2c1a12;
-      --dot: rgba(241, 237, 230, 0.07);
+      --paper: #0b1020;
+      --surface: #151c2e;
+      --ink: #eef2f8;
+      --muted: #a9b4c7;
+      --line: #2c364d;
+      --human: #8fb0ff;
+      --human-soft: #1a2545;
+      --agent: #c4b5fd;
+      --agent-soft: #2a2250;
+      --dot: transparent;
+      --ok: #6fd19a;
+      --ok-soft: #123524;
+      --col: #1e2740;
+      --yellow: #ffd84d;
+      --yellow-soft: #33290a;
+      --yellow-line: #ffd84d;
+      --navy: #060a16;
+      --botao: #2f5bd6;
     }
   }
   * { box-sizing: border-box; }
@@ -112,6 +132,16 @@
   footer { max-width: 60rem; margin: 0 auto; padding: 2rem 1rem 3rem; border-top: 1px dashed var(--line); font-size: 0.92rem; color: var(--muted); }
   footer p { margin: 0; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  /* T1T-30: direção "Quadro de Sprint" */
+  h1, h2, h3, h4, .logo { letter-spacing: -0.01em; }
+  .topo { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; padding: 0.85rem 5vw; background: var(--navy); color: #fff; font-size: 0.95rem; }
+  .topo a { color: #fff; text-decoration: none; }
+  .topo a:hover { color: var(--yellow); }
+  .topo a:focus-visible { outline-color: var(--yellow); }
+  .logo { font-family: var(--serif); font-weight: 800; }
+  h1 { font-weight: 800; }
+  .refs > li { border-top: 8px solid var(--human); border-radius: 0.9rem; }
 </style>
 <style>
   /* Esconde o badge 'Powered by Netlify' (pedido do Cliente) */
@@ -119,6 +149,7 @@
 </style>
 </head>
 <body>
+<header class="topo"><a class="logo" href="index.html">Tema 14 · Sprint Board</a><span>Human–AI teaming no Scrum</span></header>
 <main>
   <p class="eyebrow">Tema 14 · Human–AI teaming no Scrum</p>
   <a class="voltar" href="index.html#percurso">← Voltar ao percurso</a>

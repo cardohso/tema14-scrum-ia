@@ -7,37 +7,51 @@
 <meta name="description" content="Como mudam os papéis, os eventos e a Definition of Done do Scrum quando agentes de IA escrevem código.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #f3efe6;
-    --surface: #fffdf8;
-    --ink: #1c1a17;
-    --muted: #57534e;
-    --line: #d6cfc2;
-    --human: #b4380f;
-    --human-soft: #fbe6dc;
-    --agent: #3b3f9e;
-    --agent-soft: #e7e8fb;
-    --dot: rgba(28, 26, 23, 0.08);
-    --ok: #2f6b3a;
-    --serif: "Fraunces", Georgia, serif;
-    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    --paper: #eef1f6;
+    --surface: #ffffff;
+    --ink: #101828;
+    --muted: #475467;
+    --line: #d0d5dd;
+    --human: #1d4ed8;
+    --human-soft: #e8efff;
+    --agent: #4c1d95;
+    --agent-soft: #ece7ff;
+    --dot: transparent;
+    --ok: #067647;
+    --ok-soft: #d9f2e3;
+    --col: #dfe4ee;
+    --yellow: #ffd84d;
+    --yellow-soft: #fff3c4;
+    --yellow-line: #8a6a00;
+    --navy: #101828;
+    --botao: #1d4ed8;
+    --serif: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --paper: #121110;
-      --surface: #1b1a18;
-      --ink: #f1ede6;
-      --muted: #b8b2a7;
-      --line: #34312c;
-      --human: #ff8a5c;
-      --human-soft: #2c1a12;
-      --agent: #a5acff;
-      --agent-soft: #1c1e38;
-      --dot: rgba(241, 237, 230, 0.07);
-      --ok: #7fd18f;
+      --paper: #0b1020;
+      --surface: #151c2e;
+      --ink: #eef2f8;
+      --muted: #a9b4c7;
+      --line: #2c364d;
+      --human: #8fb0ff;
+      --human-soft: #1a2545;
+      --agent: #c4b5fd;
+      --agent-soft: #2a2250;
+      --dot: transparent;
+      --ok: #6fd19a;
+      --ok-soft: #123524;
+      --col: #1e2740;
+      --yellow: #ffd84d;
+      --yellow-soft: #33290a;
+      --yellow-line: #ffd84d;
+      --navy: #060a16;
+      --botao: #2f5bd6;
     }
   }
   * { box-sizing: border-box; }
@@ -382,39 +396,6 @@
   .resultado { margin: 0 0 0.5rem; font-family: var(--serif); font-size: clamp(3rem, 10vw, 4.5rem); line-height: 1; color: var(--human); }
 
 
-  /* T1T-16: progresso geral (barra lateral) */
-  .pg { position: fixed; z-index: 20; top: 0; right: 0; bottom: 0; width: 4px; }
-  .pg-titulo { display: none; }
-  .pg-corpo { position: static; }
-  .pg-barra { position: absolute; inset: 0; background: var(--line); }
-  .pg-fill { position: absolute; left: 0; right: 0; top: 0; height: calc(var(--p, 0) * 100%); background: var(--human); transition: height 0.15s linear; }
-  .pg ol { display: none; margin: 0; padding: 0; list-style: none; }
-  @media (min-width: 1360px) {
-    .pg {
-      top: 50%; right: 1.25rem; bottom: auto; width: 11.5rem;
-      transform: translateY(-50%);
-      padding: 1rem 1.1rem;
-      border: 1px solid var(--line);
-      border-radius: 0.75rem;
-      background: var(--surface);
-    }
-    .pg-titulo { display: flex; justify-content: space-between; margin: 0 0 0.9rem; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-    .pg-corpo { position: relative; }
-    .pg-barra { inset: 0.6rem auto 0.6rem 4px; width: 2px; border-radius: 1px; }
-    .pg ol { display: grid; gap: 0.95rem; }
-    .pg li { position: relative; padding-left: 1.6rem; font-size: 0.88rem; line-height: 1.2rem; }
-    .pg li a { color: var(--muted); text-decoration: none; }
-    .pg li a:hover { color: var(--human); }
-    .pg li::before {
-      content: ""; position: absolute; left: 0; top: 4.6px;
-      width: 10px; height: 10px; box-sizing: border-box;
-      border: 2px solid var(--line); border-radius: 50%; background: var(--surface);
-    }
-    .pg li.visto::before { border-color: var(--human); background: var(--human); }
-    .pg li.atual::before { left: -2px; top: 2.6px; width: 14px; height: 14px; border-color: var(--human); background: var(--surface); }
-    .pg li.atual a { color: var(--ink); font-weight: 600; }
-  }
-
   /* T1T-16: progresso no quiz (barra horizontal no fundo do cartão) */
   .quiz-progresso { margin-top: 1.75rem; padding-top: 1.1rem; border-top: 1px dashed var(--line); }
   .quiz-progresso[hidden] { display: none; }
@@ -467,10 +448,100 @@
   .dod-card .start:disabled { opacity: 0.5; cursor: not-allowed; }
   .dod-card .start:disabled:hover { background: var(--ink); }
 
+  /* T1T-30: direção "Quadro de Sprint" */
+  h1, h2, h3, h4, .logo { letter-spacing: -0.01em; }
+  .topo { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; padding: 0.85rem 5vw; background: var(--navy); color: #fff; font-size: 0.95rem; }
+  .topo a { color: #fff; text-decoration: none; }
+  .topo a:hover { color: var(--yellow); }
+  .topo a:focus-visible { outline-color: var(--yellow); }
+  .logo { font-family: var(--serif); font-weight: 800; }
+
+  /* T1T-30: barra de progresso em forma de quadro */
+  html { scroll-padding-top: 6.5rem; }
+  .sprint { position: sticky; top: 0; z-index: 20; padding: 0.6rem 5vw; background: var(--surface); border-bottom: 1px solid var(--line); box-shadow: 0 4px 10px rgba(16, 24, 40, 0.08); }
+  .sprint-topo { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.45rem; font-size: 0.82rem; font-weight: 700; }
+  .sprint-menu { display: none; }
+  .sprint-segs { display: none; }
+  .sprint-lista { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+  .sprint-lista a { display: flex; flex-direction: column; justify-content: center; min-height: 3rem; height: 100%; padding: 0.3rem 0.6rem; border: 1px solid var(--line); border-radius: 0.5rem; background: var(--surface); color: var(--ink); text-decoration: none; line-height: 1.25; }
+  .sprint-lista a:hover { border-color: var(--human); color: var(--ink); }
+  .sprint-estado { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ok); }
+  .sprint-estado:empty { display: none; }
+  .sprint-estado:not(:empty)::before { content: "✓ "; content: "✓ " / ""; }
+  .sprint-nome { font-size: 0.8rem; font-weight: 700; }
+  .sprint-lista li.feito a { background: var(--ok-soft); border-color: var(--ok); }
+  .sprint-lista li.atual a { background: var(--yellow); border: 2px solid var(--yellow-line); color: #101828; }
+  .sprint-lista li.atual .sprint-estado { color: #101828; }
+  @media (max-width: 1000px) {
+    html { scroll-padding-top: 5rem; }
+    .sprint-menu { display: inline-block; margin-left: auto; padding: 0.35rem 0.8rem; border: 1px solid var(--line); border-radius: 0.5rem; background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }
+    .sprint-menu:focus-visible { outline: 3px solid var(--human); outline-offset: 2px; }
+    .sprint-segs { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; }
+    .sprint-segs i { height: 0.55rem; border-radius: 999px; background: var(--surface); border: 1px solid var(--muted); }
+    .sprint-segs i.atual { background: var(--yellow); border-color: var(--yellow-line); }
+    .sprint-segs i.feito { background: var(--ok); border-color: var(--ok); }
+    .sprint-lista { display: none; }
+    .sprint.aberto .sprint-lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 0.6rem; max-height: 60vh; overflow-y: auto; }
+  }
+
+  /* T1T-30: componentes */
+  .hero { min-height: 0; padding-top: 2.5rem; padding-bottom: 3.5rem; gap: 3rem; }
+  @media (min-width: 900px) { .hero { grid-template-columns: 1.2fr 1fr; } }
+  h1 { font-weight: 800; line-height: 1.08; font-size: clamp(2.2rem, 5vw, 3.6rem); }
+  h1 em { font-style: normal; color: #101828; background: var(--yellow); padding: 0 0.1em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .start { border-radius: 0.5rem; background: var(--botao); color: #fff; }
+  .start:hover { background: var(--navy); color: #fff; }
+
+  .incremento { position: relative; background: var(--surface); border-radius: 0.9rem; border-top: 8px solid var(--botao); box-shadow: 0 12px 28px rgba(16, 24, 40, 0.16); }
+  .inc-topo { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--line); font: 600 0.85rem var(--mono); }
+  .inc-topo b { font: 700 0.68rem var(--sans); letter-spacing: 0.06em; text-transform: uppercase; background: var(--yellow); color: #101828; border-radius: 999px; padding: 0.2rem 0.65rem; white-space: nowrap; }
+  .incremento pre { margin: 0; padding: 0.75rem 0; font: 0.8rem/1.9 var(--mono); white-space: pre-wrap; }
+  .incremento pre span { display: block; padding: 0 1rem; background: var(--ok-soft); }
+  .incremento pre .bug { background: #fde2e1; color: #101828; box-shadow: inset 4px 0 0 #b42318; }
+  .inc-meta { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; align-items: center; margin: 0; padding: 0.9rem 1rem 1.2rem; border-top: 1px solid var(--line); font-size: 0.9rem; }
+  .inc-meta dt { color: var(--muted); }
+  .inc-meta dd { margin: 0; justify-self: start; }
+  .tag-agent { background: var(--agent-soft); color: var(--agent); border-radius: 999px; padding: 0.1rem 0.65rem; font-size: 0.78rem; font-weight: 700; }
+  .sig { display: inline-block; min-width: 9rem; height: 1.25rem; padding: 0; border-bottom: 2px solid var(--ink); }
+  .cursor { background: var(--ink); width: 2px; height: 1.1rem; }
+  .postit { position: absolute; right: -0.6rem; bottom: -2rem; width: 12rem; padding: 0.75rem 0.9rem; background: var(--yellow); color: #101828; transform: rotate(3deg); box-shadow: 0 8px 16px rgba(16, 24, 40, 0.2); font: 700 0.95rem/1.35 var(--serif); }
+  @media (max-width: 899px) { .postit { right: 0.5rem; } }
+
+  #percurso, #estudos, #simulacao, #quiz, #construtor { max-width: 72rem; }
+  #percurso > h2, #estudos > h2, #simulacao > h2, #quiz > h2, #construtor > h2 { font-weight: 800; }
+  .passo { border: 1px solid var(--line); border-top: 8px solid var(--botao); border-radius: 0.9rem; box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1); }
+  .passo-big { display: none; }
+  .passo h3 { font-weight: 700; }
+  .passo-num { display: inline-block; margin-bottom: 0.75rem; padding: 0.2rem 0.7rem; border-radius: 999px; background: var(--yellow); color: #101828; font: 700 0.72rem var(--sans); }
+  .passo h3 .passo-num { display: table; }
+  .passos a { border-radius: 0.5rem; }
+  .passos a span { color: var(--human); }
+  .cards { gap: 0.85rem; }
+  .cards div { padding: 0.75rem; border: 0; border-radius: 0.75rem; background: var(--col); }
+  .cards dt { margin: 0.15rem 0.25rem 0.6rem; font-size: 1rem; font-weight: 700; }
+  .cards dd p { margin: 0.5rem 0 0; padding: 0.8rem; border-radius: 0.6rem; background: var(--surface); box-shadow: 0 1px 2px rgba(16, 24, 40, 0.12); }
+  .ag, .hu { display: table; margin: 0 0 0.4rem; padding: 0.05rem 0.65rem; border-radius: 999px; font: 700 0.72rem var(--sans); letter-spacing: 0; text-transform: none; }
+  .ag { background: var(--agent-soft); color: var(--agent); }
+  .hu { background: var(--ok-soft); color: var(--ok); }
+  .interpretacao { background: var(--yellow-soft); border: 1px solid var(--yellow-line); }
+  .interpretacao h4 { color: var(--ink); }
+  .interpretacao li::marker { color: var(--ink); }
+  .stats strong { color: var(--human); }
+  .quiz-card, .sim-card, .dod-card { border: 1px solid var(--line); border-top-width: 8px; }
+  .quiz-card { border-top-color: var(--botao); }
+  .sim-card { border-top-color: var(--agent); }
+  .dod-card { border-top-color: var(--ok); }
+  .quiz-barra span.feita { background: var(--ok); }
+  .quiz-barra span.atual { background: var(--yellow); border-color: var(--yellow-line); }
+  .feedback { background: var(--human-soft); }
+  .resultado { color: var(--human); font-weight: 800; }
+  .dod-card .start:disabled:hover { background: var(--botao); }
+  .rodape { max-width: 72rem; }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .cursor { animation: none; }
-    .start, .start span, .passos a, .pg-fill, .quiz-barra span, .indicador-fill, .dod-op { transition: none; }
+    .start, .start span, .passos a, .quiz-barra span, .indicador-fill, .dod-op { transition: none; }
   }
 </style>
 <style>
@@ -479,45 +550,42 @@
 </style>
 </head>
 <body>
-<nav class="pg" id="progresso-geral" aria-label="Progresso na página">
-  <p class="pg-titulo"><span>Progresso</span><span id="pg-pct" aria-hidden="true">0%</span></p>
-  <div class="pg-corpo">
-    <div class="pg-barra" id="pg-barra" role="progressbar" aria-label="Progresso na página" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0%, secção: Início">
-      <div class="pg-fill"></div>
-    </div>
-    <ol>
-      <li><a href="#inicio">Início</a></li>
-      <li><a href="#papeis">Papéis</a></li>
-      <li><a href="#eventos">Eventos</a></li>
-      <li><a href="#dod">Definition of Done</a></li>
-      <li><a href="#estudos">Estudos reais</a></li>
-      <li><a href="#simulacao">Simulação</a></li>
-      <li><a href="#quiz">Quiz</a></li>
-      <li><a href="#construtor">Construtor de DoD</a></li>
-    </ol>
-  </div>
+<header class="topo"><a class="logo" href="#inicio">Tema 14 · Sprint Board</a><span>Human–AI teaming no Scrum</span></header>
+<nav class="sprint" id="progresso-geral" aria-label="Progresso na página">
+  <div class="sprint-topo"><span id="sprint-agora">Em curso: Início</span><span id="sprint-conta">0 de 7 Done</span><button type="button" class="sprint-menu" aria-expanded="false" aria-controls="sprint-lista">Secções</button></div>
+  <div class="sr-only" id="sprint-barra" role="progressbar" aria-label="Progresso na página" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0" aria-valuetext="0 de 7 secções Done"></div>
+  <div class="sprint-segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <ol class="sprint-lista" id="sprint-lista">
+      <li><a href="#papeis"><span class="sprint-estado"></span><span class="sprint-nome">Papéis</span></a></li>
+      <li><a href="#eventos"><span class="sprint-estado"></span><span class="sprint-nome">Eventos</span></a></li>
+      <li><a href="#dod"><span class="sprint-estado"></span><span class="sprint-nome">Definition of Done</span></a></li>
+      <li><a href="#estudos"><span class="sprint-estado"></span><span class="sprint-nome">Estudos</span></a></li>
+      <li><a href="#simulacao"><span class="sprint-estado"></span><span class="sprint-nome">Simulação</span></a></li>
+      <li><a href="#quiz"><span class="sprint-estado"></span><span class="sprint-nome">Quiz</span></a></li>
+      <li><a href="#construtor"><span class="sprint-estado"></span><span class="sprint-nome">Construtor</span></a></li>
+  </ol>
 </nav>
 <main>
   <section id="inicio" class="hero" tabindex="-1" aria-labelledby="pergunta">
     <div>
-      <p class="tema eyebrow">Tema 14 · Human–AI teaming no Scrum</p>
       <h1 id="pergunta">Quando um agente de IA escreve o código, <em>quem responde por ele?</em></h1>
       <p class="intro">Descobre como mudam os papéis, os eventos e a Definition of Done do Scrum quando parte do código é escrita por agentes de IA.</p>
       <a class="start" href="#percurso">Começar o percurso <span aria-hidden="true">↓</span></a>
     </div>
-    <div class="review" aria-hidden="true">
-      <div class="review-bar"><i></i><i></i><i></i><b>incremento.js</b></div>
-<pre><span class="add">+ function publicar(sprint) {</span><span class="add bug">+   if (!sprint.testes) return true;</span><span class="add">+   return validar(sprint);</span><span class="add">+ }</span></pre>
-      <dl class="review-meta">
-        <dt>autor</dt><dd class="tag-agent">agente de IA</dd>
+    <div class="incremento" aria-hidden="true">
+      <div class="inc-topo"><span>incremento.js</span><b>Em revisão</b></div>
+<pre><span>+ function publicar(sprint) {</span><span class="bug">+   if (!sprint.testes) return true;</span><span>+   return validar(sprint);</span><span>+ }</span></pre>
+      <dl class="inc-meta">
+        <dt>autor</dt><dd><span class="tag-agent">agente de IA</span></dd>
         <dt>revisto por</dt><dd><span class="sig"><span class="cursor"></span></span></dd>
       </dl>
+      <div class="postit">Sem nome aqui, não é Done.</div>
     </div>
   </section>
 
   <section id="percurso" tabindex="-1" aria-labelledby="percurso-titulo">
     <h2 id="percurso-titulo">Percurso</h2>
-    <p>Três passos. Em cada um vês o que diz o Scrum Guide e, na caixa laranja, o que muda com agentes. As fontes estão no fim de cada passo e todas juntas na <a href="referencias.html">página de referências</a>.</p>
+    <p>Três passos. Em cada um vês o que diz o Scrum Guide e, na caixa amarela, o que muda com agentes. As fontes estão no fim de cada passo e todas juntas na <a href="referencias.html">página de referências</a>.</p>
     <nav aria-label="Passos do percurso">
       <ol class="passos">
         <li><a href="#papeis"><span>01</span> Papéis</a></li>
@@ -1132,54 +1200,55 @@
     iniciar();
   })();
 
-  // T1T-16: progresso geral da página (barra lateral)
+  // T1T-30: progresso da página em forma de quadro (o que fica Done não volta atrás)
   (function () {
     const nav = document.getElementById("progresso-geral");
-    const barra = document.getElementById("pg-barra");
-    const pct = document.getElementById("pg-pct");
-    const itens = Array.from(nav.querySelectorAll("li"));
+    const barra = document.getElementById("sprint-barra");
+    const menu = nav.querySelector(".sprint-menu");
+    const itens = Array.from(nav.querySelectorAll(".sprint-lista li"));
+    const segs = Array.from(nav.querySelectorAll(".sprint-segs i"));
     const alvos = itens.map(li => document.querySelector(li.firstElementChild.getAttribute("href")));
-    const nomes = itens.map(li => li.textContent.trim());
-    const visto = new Set();
+    const nomes = itens.map(li => li.querySelector(".sprint-nome").textContent);
+    const feitas = new Set();
     let pendente = false;
 
     function calcular() {
       pendente = false;
-      const doc = document.documentElement;
-      const vh = window.innerHeight;
-      const y = window.scrollY;
-      const max = Math.max(doc.scrollHeight - vh, 1);
-      const noFim = y >= max - 2;
-      const linha = y + vh * 0.35;
-      const topos = alvos.map(a => a.getBoundingClientRect().top + y);
-      const fim = doc.scrollHeight - vh * 0.65;
-      const n = itens.length;
-      let ativo = 0;
-      topos.forEach((t, i) => { if (t <= linha) ativo = i; });
-      if (noFim) ativo = n - 1;
-      let f;
-      if (y <= 0) f = 0;
-      else if (noFim) f = 1;
-      else {
-        const ini = topos[ativo];
-        const seguinte = ativo < n - 1 ? topos[ativo + 1] : fim;
-        const parte = seguinte > ini ? Math.min(Math.max((linha - ini) / (seguinte - ini), 0), 1) : 0;
-        f = (ativo + parte) / (n - 1);
-      }
-      f = Math.min(Math.max(f, 0), 1);
-      for (let i = 0; i <= ativo; i++) visto.add(i);
-      itens.forEach((li, i) => {
-        li.classList.toggle("atual", i === ativo);
-        li.classList.toggle("visto", i !== ativo && visto.has(i));
-        const a = li.firstElementChild;
-        if (i === ativo) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
+      const linha = window.innerHeight * 0.45;
+      const noFim = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      let ultima = -1;
+      alvos.forEach((a, i) => {
+        const r = a.getBoundingClientRect();
+        if (r.top <= linha) ultima = i;
+        if (r.bottom <= linha || noFim) feitas.add(i);
       });
-      const valor = Math.round(f * 100);
-      nav.style.setProperty("--p", f);
-      pct.textContent = valor + "%";
-      barra.setAttribute("aria-valuenow", valor);
-      barra.setAttribute("aria-valuetext", `${valor}%, secção: ${nomes[ativo]}`);
+      const atual = ultima >= 0 && !feitas.has(ultima) ? ultima : -1;
+      itens.forEach((li, i) => {
+        const estado = feitas.has(i) ? "feito" : i === atual ? "atual" : "";
+        li.className = estado;
+        segs[i].className = estado;
+        li.querySelector(".sprint-estado").textContent = estado === "feito" ? "Done" : "";
+        const a = li.firstElementChild;
+        if (i === atual) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
+      });
+      const total = itens.length;
+      const porFazer = itens.findIndex((li, i) => i > ultima && !feitas.has(i));
+      const texto = feitas.size === total ? "Sprint concluída"
+        : atual >= 0 ? "Em curso: " + nomes[atual]
+        : ultima >= 0 ? (porFazer > ultima ? "A seguir: " + nomes[porFazer] : "A rever: " + nomes[ultima])
+        : "Em curso: Início";
+      document.getElementById("sprint-agora").textContent = texto;
+      document.getElementById("sprint-conta").textContent = `${feitas.size} de ${total} Done`;
+      barra.setAttribute("aria-valuenow", feitas.size);
+      barra.setAttribute("aria-valuetext", `${feitas.size} de ${total} secções Done. ${texto}`);
     }
+    function fechar() { nav.classList.remove("aberto"); menu.setAttribute("aria-expanded", "false"); }
+    menu.addEventListener("click", () => {
+      const aberto = nav.classList.toggle("aberto");
+      menu.setAttribute("aria-expanded", String(aberto));
+    });
+    nav.addEventListener("click", e => { if (e.target.closest("a")) fechar(); });
+    nav.addEventListener("keydown", e => { if (e.key === "Escape" && nav.classList.contains("aberto")) { fechar(); menu.focus(); } });
     function agendar() { if (!pendente) { pendente = true; requestAnimationFrame(calcular); } }
     window.addEventListener("scroll", agendar, { passive: true });
     window.addEventListener("resize", agendar);
